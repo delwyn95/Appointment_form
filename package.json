@@ -5,7 +5,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
     "@zeit/next-sass": "^1.0.1",
+    "json-loader": "^0.5.7",
     "next": "^7.0.2",
     "node-sass": "^4.11.0",
     "react": "^16.7.0",
