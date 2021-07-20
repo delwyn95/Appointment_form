@@ -2,79 +2,74 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import { BasicForm } from '../components/Form'
 
 import formData from '../data/form.json'
 
-export default function CustomForm({ selectedService, onChangeForm, name }) {
+export default function CustomForm({
+  selectedService,
+  onChangeForm,
+  ...props
+}) {
   // Choose which form to display
+
   //Pass all the data
-  function handleSubmit() {
+  function handleSubmit(event) {
     event.preventDefault()
-    console.log('Submitted: First Name ' + name)
+    console.log(
+      `Submitted:\n First Name: ${props.firstName} \n Last Name: ${props.lastName} \n email: ${props.email} \n phoneNumber: ${props.phoneNumber} country: ${props.country}  details: ${props.details} `
+    )
   }
 
-  const dynamicForm = formData.filter((form, i) => {
+  const dynamicForm = formData.filter((form, formIndex) => {
     const servicesForForms = form.services
 
+    // console.log(i, form)
     //If there is no match, return the last data for the field to display
-    if (i == formData.length) {
+    if (formIndex + 1 == formData.length) {
       return true
     }
 
     //iterate through the array of the Services, return the one that matches.
     for (let i = 0; i < servicesForForms.length; i++) {
-      if (servicesForForms[i].match(selectedService)) {
+      if (servicesForForms[i] == selectedService) {
         return true
       }
     }
   })
 
-  let fieldsToDisplay = ``
-	// --NOT FUNCTIONAL
-  // This logic is to generate which fields to display based on the dynamicForm object, the textfield should
-	// generated depdning on the list on the objec.t
-  // if (form.length == 5) {
-  //   fieldsToDisplay = `
-	// 		<TextField id="filled-basic" label="first_name" variant="filled"/>
-  // 		<TextField id="filled-basic" label="last_name" variant="filled"/>`
-  // } else {
-  //   fieldsToDisplay = form[0]['fields'].map((formField) => (
-  //     <TextField id='filled-basic' label={formField.name} variant='filled' />
-  //   ))
-  // }
-
-  console.log('dynamicForm', dynamicForm)
-
   //return fields but in text
-  const dynamicFieldsToDisplay = dynamicForm.forEach((formInformation) => {
-    return (
-      <TextField
-        name={formInformation.name}
-        id='filled-basic'
-        label={formInformation.label}
-        variant='filled'
-        onChange={(e) => onChangeForm(e)}
-      />
-    )
-  })
+  const dynamicFieldsToDisplay = dynamicForm[0]['fields'].map(
+    (formInformation) => {
+      if (formInformation.type == 'dropdown') {
+        return (
+          <BasicForm
+            key={formInformation.name}
+            name={formInformation.name}
+            label={formInformation.label}
+            listOfOptions={formInformation.options}
+            setValue={props.setFormValue}
+          />
+        )
+      } else {
+        return (
+          <TextField
+            key={formInformation.name}
+            name={formInformation.name}
+            id='filled-basic'
+            label={formInformation.label}
+            variant='filled'
+            onChange={(e) => onChangeForm(e)}
+          />
+        )
+      }
+    }
+  )
 
   return (
-    <form noValidate autoComplete='off'>
+    <form noValidate autoComplete='off' onSubmit={handleSubmit}>
       {dynamicFieldsToDisplay}
-      <TextField
-        name='first_name'
-        id='filled-basic'
-        label='First Name'
-        variant='filled'
-        onChange={(e) => onChangeForm(e)}
-      />
-      <TextField id='filled-basic' label='Last Name' variant='filled' />
-      <br />
-      <TextField id='filled-basic' label='Telephone' variant='filled' />
-      <TextField id='filled-basic' label='Email' variant='filled' />
-      <br />
-      <TextField id='filled-basic' label='Details' variant='filled' />
-      <Button onPress={() => handleSubmit()}>Submit</Button>
+      <Button type='submit'> Submit </Button>
     </form>
   )
 }

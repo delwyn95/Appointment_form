@@ -11,15 +11,28 @@ export default function Index() {
   const [selectedService, setSelectedService] = useState('')
   const [listOfServices, setListOfServices] = useState(serviceData)
   const [service, setService] = useState('')
-  const [name, setName] = useState('')
-	//create useState for the remaining fields
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [country, setCountry] = useState('')
+  const [details, setDetails] = useState('')
+  const [formValue, setFormValue] = useState('')
 
-	//this will update the state hooks depending on which input field was modified.
+  //this will update the state hooks depending on which input field was modified.
   const onChangeForm = (e) => {
-
     if (e.target.name === 'first_name') {
-      setName(e.target.value)
+      setFirstName(e.target.value)
     } else if (e.target.name === 'last_name') {
+      setLastName(e.target.value)
+    } else if (e.target.name === 'email') {
+      setEmail(e.target.value)
+    } else if (e.target.name === 'phone_number') {
+      setPhoneNumber(e.target.value)
+    } else if (e.target.name === 'country') {
+      setCountry(e.target.value)
+    } else if (e.target.name === 'details') {
+      setDetails(e.target.value)
     }
   }
 
@@ -37,7 +50,17 @@ export default function Index() {
           setService={setService}
           service={service}
         />
-        <CustomForm service={service} onChangeForm={onChangeForm} name={name} />
+        <CustomForm
+          selectedService={service}
+          onChangeForm={onChangeForm}
+          firstName={firstName}
+          lastName={lastName}
+          email={email}
+          phoneNumber={phoneNumber}
+          country={country}
+          details={details}
+          setFormValue={setFormValue}
+        />
       </div>
     </div>
   )
